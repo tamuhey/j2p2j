@@ -7,6 +7,10 @@ type Notebook struct {
 	NbformatMinor int64                  `json:"nbformat_minor"`
 }
 
+type ICell interface {
+	ToString()
+}
+
 type BaseCell struct {
 	CellType string                 `json:"cell_type"`
 	MetaData map[string]interface{} `json:"metadata"`
