@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"testing"
 )
 
@@ -65,4 +67,20 @@ func TestP2J(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestNbconvert(t *testing.T) {
+	tmpfile, _ := ioutil.TempFile("", "tmp")
+	defer os.Remove(tmpfile.Name())
+	t.Run("nbconvert test", func(t *testing.T) {
+		P2J(testPyFile, tmpfile.Name())
+		tmpfile.Close()
+		cmd := exec.Command("jupyter", "nbconvert", tmpfile.Name(), "--to", "python")
+		_, err := cmd.Output()
+		if err != nil {
+			a := err.Error()
+			fmt.Println(a)
+			t.Error(err.Error())
+		}
+	})
 }

@@ -1,5 +1,6 @@
 package main
 
+const VersionHeader = "# j2p2jVersion: " + Version + "\n"
 const CodecellHeader = "# In []:\n"
 const MarkdowncellHeader = "# Markdown:\n"
 const AuxHeader = "# Aux:"

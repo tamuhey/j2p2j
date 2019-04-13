@@ -2,19 +2,31 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 )
 
-func (c CodeCell) ToString() string {
+func (c *CodeCell) ToString() string {
 	res := CodecellHeader
 	res += strings.Join(c.Source, "") + "\n"
 	meta := map[string]interface{}{"metadata": c.MetaData}
 	res += CellMetaPrefix + jsonify(meta) + "\n"
 	return res
 }
+func (c *MarkdownCell) ToString() string {
+	res := MarkdowncellHeader
+	var source []string
+	for _, s := range c.Source {
+		source = append(source, "# "+s)
+	}
+	res += strings.Join(source, "") + "\n"
+	meta := map[string]interface{}{"metadata": c.MetaData}
+	res += CellMetaPrefix + jsonify(meta) + "\n"
+	return res
+}
 
-func StringToCodeCell(block string) CodeCell {
-	var cell BaseCell
+func CodeStringToCell(block string) Cell {
+	var cell Cell
 	cell.CellType = CelltypeCode
 	block = strings.TrimPrefix(block, CodecellHeader)
 	s := strings.Split(block, CellMetaPrefix)
@@ -29,26 +41,11 @@ func StringToCodeCell(block string) CodeCell {
 	source = strings.TrimRight(source, "\n")
 	cell.Source = strings.SplitAfter(source, "\n")
 
-	// add aux
-	c := CodeCell{BaseCell: &cell}
-	c.Outputs = make([]interface{}, 0)
-	return c
+	return cell
 }
 
-func (c MarkdownCell) ToString() string {
-	res := MarkdowncellHeader
-	var source []string
-	for _, s := range c.Source {
-		source = append(source, "# "+s)
-	}
-	res += strings.Join(source, "") + "\n"
-	meta := map[string]interface{}{"metadata": c.MetaData}
-	res += CellMetaPrefix + jsonify(meta) + "\n"
-	return res
-}
-
-func StringToMarkdownCell(block string) MarkdownCell {
-	var cell BaseCell
+func MarkdownStringToCell(block string) Cell {
+	var cell Cell
 	cell.CellType = CelltypeMarkdown
 	block = strings.TrimPrefix(block, MarkdowncellHeader)
 	s := strings.Split(block, CellMetaPrefix)
@@ -66,6 +63,18 @@ func StringToMarkdownCell(block string) MarkdownCell {
 		sources[i] = strings.TrimPrefix(sources[i], "# ")
 	}
 	cell.Source = sources
-	c := MarkdownCell{BaseCell: &cell}
-	return c
+	return cell
+}
+
+func (c Cell) MarshalJSON() ([]byte, error) {
+	switch c.CellType {
+	case CelltypeCode:
+		if len(c.Outputs) == 0 {
+			c.Outputs = make([]interface{}, 0)
+		}
+		return json.Marshal(CodeCell(c))
+	case CelltypeMarkdown:
+		return json.Marshal(MarkdownCell(c))
+	}
+	return nil, fmt.Errorf("Marshal cell faild: %v", c)
 }

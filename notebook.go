@@ -17,50 +17,40 @@ func (notebook *Notebook) StringToAux(line string) {
 	check(err)
 }
 
-func (notebook Notebook) CellsToString() string {
+func (notebook *Notebook) CellsToString() string {
 	var output string
-	var byt []byte
-	var err error
-	var ccell CodeCell
-	var mcell MarkdownCell
 	for _, cell := range notebook.Cells {
-		c := cell.(map[string]interface{})
-		celltype := c["cell_type"].(string)
-		switch celltype {
+		switch cell.CellType {
 		case CelltypeCode:
-			byt, err = json.Marshal(c)
-			check(err)
-			err = json.Unmarshal(byt, &ccell)
-			check(err)
-			output += ccell.ToString()
+			c := CodeCell(cell)
+			output += c.ToString()
 		case CelltypeMarkdown:
-			byt, err = json.Marshal(c)
-			check(err)
-			err = json.Unmarshal(byt, &mcell)
-			check(err)
-			output += mcell.ToString()
+			c := MarkdownCell(cell)
+			output += c.ToString()
 		}
 	}
 	return output
 }
 
-func (notebook Notebook) ToString() string {
-	output := notebook.AuxToString()
+func (notebook *Notebook) ToString() string {
+	output := VersionHeader
+	output += notebook.AuxToString()
 	output += notebook.CellsToString()
 	return output
 }
 
 func StringToNotebook(text string) Notebook {
 	var notebook Notebook
+	// TODO: show warnings if incorrect version header
 	texts := SplitToBlocks(text)
 	for _, block := range texts {
 		switch {
 		case strings.HasPrefix(block, AuxHeader):
 			notebook.StringToAux(block)
 		case strings.HasPrefix(block, CodecellHeader):
-			notebook.Cells = append(notebook.Cells, StringToCodeCell(block))
+			notebook.Cells = append(notebook.Cells, CodeStringToCell(block))
 		case strings.HasPrefix(block, MarkdowncellHeader):
-			notebook.Cells = append(notebook.Cells, StringToMarkdownCell(block))
+			notebook.Cells = append(notebook.Cells, MarkdownStringToCell(block))
 		}
 	}
 	return notebook
@@ -89,5 +79,4 @@ func SplitToBlocks(line string) []string {
 		line = line[:i]
 	}
 	return output
-
 }

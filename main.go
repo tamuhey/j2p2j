@@ -12,6 +12,8 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
+const Version = "v1.0.0"
+
 // J2P convert jupyter notebook to python script
 func J2P(inFname string, outFname string) error {
 	data, err := ioutil.ReadFile(inFname)
