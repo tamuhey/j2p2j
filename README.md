@@ -14,8 +14,10 @@ $ j2p2j bar.py
 
 # Installation
 
-## Go
+Go
 
 ```
 $ go install github.com/tamuhey/j2p2j
 ```
+
+or download binary in [release page](https://github.com/tamuhey/j2p2j/releases) 
