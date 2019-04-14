@@ -1,5 +1,5 @@
 RELEASE_DIR=releases
-.PHONY $(RELEASE_DIR)
+.PHONY: $(RELEASE_DIR)
 
 deps:
 	@echo "Downloading deps..."
