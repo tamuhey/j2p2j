@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch file",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${file}",
+            "dlvLoadConfig": {
+                "followPointers": true,
+                "maxVariableRecurse": 1,
+                "maxStringLen": 1000,
+                "maxArrayValues": 64,
+                "maxStructFields": -1
+            }
+        },
+        {
             "name": "Launch",
             "type": "go",
             "request": "launch",
