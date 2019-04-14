@@ -5,19 +5,16 @@ env:
   - GO111MODULE=on
   - GOFLAGS='-mod vendor'
 go:
-- 1.x
+  - 1.x
+python:
+  - "3.6"
 git:
   depth: 1
-
 install: true
 before_script:
-  - sudo apt-get update
-  - sudo apt-get -y install python3.6 python-pip python-dev
-  - sudo apt-get -y install ipython ipython-notebook
-  - pip install jupyter
+  - pip install jupyter --user
   - go install github.com/mitchellh/gox
 script:
-  - go install github.com/mitchellh/gox
   - make test
 after_script:
   - make build
