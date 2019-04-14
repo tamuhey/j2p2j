@@ -1,0 +1,16 @@
+language: go
+go:
+- 1.x
+script:
+- go get gox
+- make test
+- make build
+deploy:
+  provider: releases
+  api_key:
+    secure: q/TOp3s/3BwTaTRSnNMJDH5IMmrmOudOdj81F+Z54Oic4zK3cZAVjulnecFV9F5xuIRCLdqOQzNW5m2Ssni8HrBRWX/nt6DNxz7Z6Oler6SPywn6MFpADiudtLx23A9ZxOROy6z52wgqWZWIJICQtsrVsnMIE/q6zEXJeLwG4NssnV16OKvWip/ht7E7ZwY/5ITuMYIL3HuSk12cK3l8elM7U7IjPXbksnyguM3dXxVeYR3PsL/hV+ZKBVkRBHoJJGWfbUfIL3bfrIXqDMqkFdN/oCALCQ1vxC5+4wuCtxvBiBAWDYeCtmUJxh0UKOihmfP9zcPrGnyJXGzzpYZxHGw6d6ptEwNqie5XsS1KsSY+lH3Q5Bwc7OVjfMHmLWfOo9QQhcQhuZVqM0d9FqTDeiR9BoKWN2F5v2Bqhxc6+B/eNBbEO7AOKNns80J4gUOvXa+RwBtuly1wjkH8mWUMECstytGZ82eeUiRJ0PZe6Ok81bMmd8KqrdIonP9XBYeGTfBil5U7lnu9Y2E5p8qh7sEhZ4RIxw5Jg7ItiA/KI7CHyPkcg7ntZW7Y+XC2gYwW0BiacdlKCf0j3WXrPHygthUM15fwaT/Hsunvd7k/+g01V3ZR/zpRAN9r+cdDHsMbv/YjbMnK2ZY7njKlCY6FdBCaIH1mWoJ6DRye0XDtmVs=
+  file: releases/*
+  on:
+    repo: tamuhey/j2p2j
+  skip_cleanup: true
+  draft: true
