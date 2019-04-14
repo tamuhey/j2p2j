@@ -1,10 +1,20 @@
+dist: xenial
 language: go
+env:
+  - GO111MODULE=on
+  - GOFLAGS='-mod vendor'
 go:
 - 1.x
+git:
+  depth: 1
+
+install: true
+before_script:
+  - go install github.com/mitchellh/gox
 script:
-- go get gox
-- make test
-- make build
+  - go install github.com/mitchellh/gox
+  - make test
+  - make build
 deploy:
   provider: releases
   api_key:
