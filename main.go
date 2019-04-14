@@ -12,7 +12,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-const Version = "v1.0.0"
+const Version = "v1.0.1"
 
 // J2P convert jupyter notebook to python script
 func J2P(inFname string, outFname string) error {
@@ -48,8 +48,13 @@ func P2J(inFname string, outFname string) error {
 }
 
 func main() {
-	mode := *flag.String("mode", "", strings.Join(modes, ", "))
+	flag_version := flag.Bool("version", false, "show version")
+	mode := flag.String("mode", "", strings.Join(modes, ", "))
 	flag.Parse()
+	if *flag_version {
+		fmt.Println("J2P2J version: " + Version)
+		os.Exit(0)
+	}
 	args := flag.Args()
 	if len(args) != 1 && len(args) != 2 {
 		os.Stderr.WriteString("Invalid arguments")
@@ -62,17 +67,17 @@ func main() {
 	}
 	ext := filepath.Ext(inFname)
 
-	if mode == "" {
+	if *mode == "" {
 		if ext == ".ipynb" {
-			mode = modej2p
+			*mode = modej2p
 		} else if ext == ".py" {
-			mode = modep2j
+			*mode = modep2j
 		} else {
 			log.Fatal("Invalid file extension, or specify mode")
 		}
 	}
 
-	if mode == modej2p {
+	if *mode == modej2p {
 		if len(args) == 1 {
 			outfname = strings.TrimSuffix(inFname, ext) + ".py"
 		}
@@ -81,7 +86,7 @@ func main() {
 		fmt.Println("Successfully converted Jupyter => Python!")
 		os.Exit(0)
 	}
-	if mode == modep2j {
+	if *mode == modep2j {
 		if len(args) == 1 {
 			outfname = strings.TrimSuffix(inFname, ext) + ".ipynb"
 		}

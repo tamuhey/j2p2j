@@ -23,6 +23,5 @@ deploy:
   file: releases/*
   on:
     repo: tamuhey/j2p2j
-    tags: true
   skip_cleanup: true
   draft: true

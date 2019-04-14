@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -78,8 +77,6 @@ func TestNbconvert(t *testing.T) {
 		cmd := exec.Command("jupyter", "nbconvert", tmpfile.Name(), "--to", "python")
 		_, err := cmd.Output()
 		if err != nil {
-			a := err.Error()
-			fmt.Println(a)
 			t.Error(err.Error())
 		}
 	})
